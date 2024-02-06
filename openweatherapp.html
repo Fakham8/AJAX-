@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+    #weatherData {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h1>Weather App</h1>
+
+<input type="text" id="cityInput" placeholder="Enter city name">
+<button onclick="fetchWeather()">Get Weather</button>
+
+<div id="weatherData"></div>
+
+<script>
+function fetchWeather() {
+    var city = document.getElementById('cityInput').value;
+    var apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+    var url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var weatherData = `
+                <h2>${response.name}, ${response.sys.country}</h2>
+                <p>Weather: ${response.weather[0].main}</p>
+                <p>Description: ${response.weather[0].description}</p>
+                <p>Temperature: ${response.main.temp}°C</p>
+                <p>Humidity: ${response.main.humidity}%</p>
+                <p>Wind Speed: ${response.wind.speed} m/s</p>
+            `;
+            $('#weatherData').html(weatherData);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            $('#weatherData').html('<p>Error fetching weather data. Please try again.</p>');
+        }
+    });
+}
+</script>
+
+</body>
+</html>
